@@ -41,7 +41,7 @@ class Client:
             self.auth_headers.update({"x-api-key": x_api_key})
 
 
-    def generate_basic_auth(username, password):
+    def generate_basic_auth(self, username, password):
         token = base64.b64encode(f"{username}:{password}".encode('utf-8')).decode("ascii")
         return f'Basic {token}'
 
