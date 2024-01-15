@@ -29,10 +29,21 @@ class Client:
 
         self.auth_headers = kwargs.get("auth_headers", dict())
 
+        self.username_password = kwargs.get("username_password", None)
+
+        if self.username_password:
+            self.auth_headers['Authorization'] = self.generate_basic_auth(self.username_password[0],self.username_password[1])
+
         x_api_key = os.environ.get("X_API_KEY")
 
         if x_api_key and "x-api-key" not in self.auth_headers:
             self.auth_headers.update({"x-api-key": x_api_key})
+
+
+    def generate_basic_auth(username, password):
+        token = base64.b64encode(f"{username}:{password}".encode('utf-8')).decode("ascii")
+        return f'Basic {token}'
+
 
     def request(self, **kwargs):
         kwargs["url"] = f"{self.kafka_rest_api_url}{kwargs['url']}"
