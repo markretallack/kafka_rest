@@ -11,7 +11,6 @@ setuptools.setup(
     description="fork of nlp-kafka-rest-api",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    package_dir={"": "src"},
     url="https://pypi.org/project/nlp-kafka-rest-api",
     packages=setuptools.find_packages(),
     classifiers=[
