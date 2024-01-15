@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="nlp-kafka-rest-api",
+    name="nlp_kafka_rest_api",
     version="1.0.1",
     author="shashi1991, mark.retallack@yunextraffic.com",
     author_email="mark.retallack@yunextraffic.com",
