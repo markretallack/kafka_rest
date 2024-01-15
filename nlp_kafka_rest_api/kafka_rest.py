@@ -34,7 +34,6 @@ class Client:
         if self.username_password:
             self.auth_headers['Authorization'] = self.generate_basic_auth(self.username_password[0],self.username_password[1])
 
-        print("self.auth_headers: "+str(self.auth_headers))
         x_api_key = os.environ.get("X_API_KEY")
 
         if x_api_key and "x-api-key" not in self.auth_headers:
