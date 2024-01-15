@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="nlp-kafka-rest-api",
-    version="0.0.1",
+    version="1.0.1",
     author="shashi1991, mark.retallack@yunextraffic.com",
     author_email="mark.retallack@yunextraffic.com",
     description="fork of nlp-kafka-rest-api",
