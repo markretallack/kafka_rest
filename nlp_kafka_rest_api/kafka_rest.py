@@ -234,6 +234,30 @@ class Consumer(Client):
 
         return response_decoded        
 
+    def position(self, topic, position, offset):
+        """
+        Position to move to
+        :return: self.
+        """
+
+        url = f"/consumers/{self.consumer_group}/instances/{self.instance}/positions"
+        headers = {"Content-Type": "application/vnd.kafka.json.v2+json"}
+        payload_data = json.dumps(
+                        {
+                            "offsets": [
+                                {
+                                    "topic": topic,
+                                    "partition": position,
+                                    "offset": offset
+                                }
+                            ]
+                        })
+
+        self.request(method="POST", url=url, headers=headers, data=payload_data)
+
+        return self
+
+
     def delete(self):
         """
         Delete the current client instance from the kafka cluster.
