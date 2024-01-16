@@ -221,6 +221,19 @@ class Consumer(Client):
 
         return response_decoded
 
+    def consume_all_raw(self) -> List[Dict[str, Any]]:
+        """
+        Consume the earliest messages in the assigned topics.
+        :return: List of dictionaries where the "value" key contains the message and the "key" key contains its key.
+        """
+        url = f'/consumers/{self.consumer_group}/instances/{self.instance}/records'
+        headers = {'Accept': self.accept}
+
+        response = self.request(method="GET", url=url, headers=headers, data="")
+        response_decoded = response.json()
+
+        return response_decoded        
+
     def delete(self):
         """
         Delete the current client instance from the kafka cluster.
