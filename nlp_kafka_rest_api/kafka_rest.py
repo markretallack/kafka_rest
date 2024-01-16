@@ -234,6 +234,20 @@ class Consumer(Client):
 
         return response_decoded        
 
+    def partitions(self, topic):
+        """
+        Get the partitions for a topic
+        :return: partitions.
+        """
+
+        url = f"/topics/{topic}/partitions"
+        headers = {"Content-Type": "application/vnd.kafka.json.v2+json"}
+
+        response=self.request(method="GET", url=url, headers=headers)
+
+        return response.json()
+
+
     def position(self, topic, position, offset):
         """
         Position to move to
