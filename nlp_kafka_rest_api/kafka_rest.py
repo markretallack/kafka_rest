@@ -234,6 +234,21 @@ class Consumer(Client):
 
         return response_decoded        
 
+
+    def offsets(self, topic, partition):
+        """
+        Get the offsets for a topic
+        :return: self.
+        """
+
+        url = f"/topics/{topic}/partitions/{partition}/offsets"
+        headers = {"Content-Type": "application/vnd.kafka.json.v2+json"}
+
+        response=self.request(method="GET", url=url, headers=headers)
+
+        return response.json()
+
+        
     def partitions(self, topic):
         """
         Get the partitions for a topic
