@@ -263,7 +263,7 @@ class Consumer(Client):
         return response.json()
 
 
-    def position(self, topic, position, offset):
+    def seek(self, topic, position, offset):
         """
         Position to move to
         :return: self.
