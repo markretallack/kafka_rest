@@ -208,6 +208,21 @@ class Consumer(Client):
         self.request(method="POST", url=url, headers=headers, data=topics_data)
         return self
 
+
+    def assign(self, partitions):
+        """
+        Assign a given partitions.
+        :return: self.
+        """
+
+        url = f"/consumers/{self.consumer_group}/instances/{self.instance}/assignments"
+        headers = {"Content-Type": "application/vnd.kafka.json.v2+json"}
+        partitions_data = json.dumps(partitions)
+
+        self.request(method="POST", url=url, headers=headers, data=partitions_data)
+        return self
+
+
     def consume_earliest(self) -> List[Dict[str, Any]]:
         """
         Consume the earliest messages in the assigned topics.
