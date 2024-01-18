@@ -258,14 +258,18 @@ class Consumer(Client):
         offsets = self.offsets(self.topic_id, partid)
         # and now we have the latest offset
         latestoffset=offsets["end_offset"]
-        # so move the the previous offset
-        self.seek(self.topic_id, partid,latestoffset-1)
-
+        
         response_decode=None
-        # consume the earliest entry until there is no more data
-        # so we can get the latest event from the topic
-        for message in self.consume_earliest():
-            response_decode=message["value"]
+
+        if latestoffset>0:
+            # so move the the previous offset
+            self.seek(self.topic_id, partid,latestoffset-1)
+
+
+            # consume the earliest entry until there is no more data
+            # so we can get the latest event from the topic
+            for message in self.consume_earliest():
+                response_decode=message["value"]
             
         return response_decode
 
