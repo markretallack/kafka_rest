@@ -236,6 +236,39 @@ class Consumer(Client):
 
         return response_decoded
 
+    def consume_latest(self) -> List[Dict[str, Any]]:
+        """
+        Consume the latest messages in the assigned topics.
+        :return: List of dictionaries where the "value" key contains the message and the "key" key contains its key.
+        """
+
+        # we need to use assign instead of subscribe
+        # so we can get the latest event from the topic
+        self.assign({
+                "partitions": [
+                    {
+                    "topic": self.topic_id,
+                    "partition": 0
+                    }
+                ]})
+
+        partitions = self.partitions(self.topic_id)
+        # get the first partition id? (not sure this is needed as we have manually assigned it already)
+        partid=partitions[0]["partition"]        
+        offsets = self.offsets(self.topic_id, partid)
+        # and now we have the latest offset
+        latestoffset=offsets["end_offset"]
+        # so move the the previous offset
+        self.seek(self.topic_id, partid,latestoffset-1)
+
+        response_decode=None
+        # consume the earliest entry until there is no more data
+        # so we can get the latest event from the topic
+        for message in self.consume_earliest():
+            response_decode=message["value"]
+            
+        return response_decode
+
     def consume_all_raw(self) -> List[Dict[str, Any]]:
         """
         Consume the earliest messages in the assigned topics.
