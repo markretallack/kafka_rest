@@ -258,7 +258,7 @@ class Consumer(Client):
         offsets = self.offsets(self.topic_id, partid)
         # and now we have the latest offset
         latestoffset=offsets["end_offset"]
-        
+
         response_decode=None
 
         if latestoffset>0:
@@ -269,7 +269,7 @@ class Consumer(Client):
             # consume the earliest entry until there is no more data
             # so we can get the latest event from the topic
             for message in self.consume_earliest():
-                response_decode=message["value"]
+                response_decode=message
             
         return response_decode
 
