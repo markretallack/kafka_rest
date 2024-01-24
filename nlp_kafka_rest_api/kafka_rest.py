@@ -227,7 +227,7 @@ class Consumer(Client):
         return self
 
 
-    def consume_earliest(self) -> List[Dict[str, Any]]:
+    def consume_earliest(self, max_bytes: int = None) -> List[Dict[str, Any]]:
         """
         Consume the earliest messages in the assigned topics.
         :return: List of dictionaries where the "value" key contains the message and the "key" key contains its key.
@@ -235,7 +235,12 @@ class Consumer(Client):
         url = f'/consumers/{self.consumer_group}/instances/{self.instance}/records'
         headers = {'Accept': self.accept}
 
-        response = self.request(method="GET", url=url, headers=headers, data="")
+        params={}
+
+        if max_bytes is not None:
+            params["max_bytes"]=max_bytes
+
+        response = self.request(method="GET", url=url, headers=headers, data="", params=params)
         response_decoded = [self.parse_record(r) for r in response.json()]
 
         return response_decoded
