@@ -192,6 +192,8 @@ class Consumer(Client):
                     "fetch.min.bytes": self.fetch_min_bytes,
                 })
 
+            print("Using request "+str(config))
+
             self.request(method="POST", url=url, headers=headers, data=config)
             self.created = True
 
