@@ -192,8 +192,6 @@ class Consumer(Client):
                     "fetch.min.bytes": self.fetch_min_bytes,
                 })
 
-            print("Using request "+str(config))
-
             self.request(method="POST", url=url, headers=headers, data=config)
             self.created = True
 
@@ -227,7 +225,7 @@ class Consumer(Client):
         return self
 
 
-    def consume_earliest(self, max_bytes: int = None) -> List[Dict[str, Any]]:
+    def consume_earliest(self, max_bytes: int = None, timeout: int = None) -> List[Dict[str, Any]]:
         """
         Consume the earliest messages in the assigned topics.
         :return: List of dictionaries where the "value" key contains the message and the "key" key contains its key.
@@ -239,6 +237,9 @@ class Consumer(Client):
 
         if max_bytes is not None:
             params["max_bytes"]=max_bytes
+
+        if timeout is not None:
+            params["timeout"]=timeout
 
         response = self.request(method="GET", url=url, headers=headers, data="", params=params)
         response_decoded = [self.parse_record(r) for r in response.json()]
@@ -343,7 +344,7 @@ class Consumer(Client):
                             ]
                         })
 
-        self.request(method="POST", url=url, headers=headers, data=payload_data)
+        res=self.request(method="POST", url=url, headers=headers, data=payload_data)
 
         return self
 
