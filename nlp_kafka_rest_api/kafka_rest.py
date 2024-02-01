@@ -254,19 +254,21 @@ class Consumer(Client):
         :return: List of dictionaries where the "value" key contains the message and the "key" key contains its key.
         """
 
+
+        partitions = self.partitions(self.topic_id)
+        # get the first partition id? (not sure this is needed as we have manually assigned it already)
+        partid=partitions[0]["partition"]        
+
         # we need to use assign instead of subscribe
         # so we can get the latest event from the topic
         self.assign({
                 "partitions": [
                     {
                     "topic": self.topic_id,
-                    "partition": 0
+                    "partition": partid
                     }
                 ]})
 
-        partitions = self.partitions(self.topic_id)
-        # get the first partition id? (not sure this is needed as we have manually assigned it already)
-        partid=partitions[0]["partition"]        
         offsets = self.offsets(self.topic_id, partid)
         # and now we have the latest offset
         latestoffset=offsets["end_offset"]
