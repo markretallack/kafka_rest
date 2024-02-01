@@ -165,6 +165,8 @@ class Consumer(Client):
         self.accept = kwargs.get("accept", 'application/vnd.kafka.binary.v2+json')
         self.request_timeout = kwargs.get("request_timeout", 11000)
         self.fetch_min_bytes = kwargs.get("fetch_min_bytes", 100000)
+        self.auto_offset_reset = kwargs.get("auto_offset_reset", "earliest") 
+
         self.remaining_keys = set()
 
     def __enter__(self):
@@ -187,7 +189,7 @@ class Consumer(Client):
                 {   
                     "name": self.instance, 
                     "format": self.format, 
-                    "auto.offset.reset": "earliest", 
+                    "auto.offset.reset": self.auto_offset_reset, 
                     "consumer.request.timeout.ms": self.request_timeout,
                     "fetch.min.bytes": self.fetch_min_bytes,
                 })
