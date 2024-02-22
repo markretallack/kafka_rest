@@ -276,8 +276,23 @@ class Consumer(Client):
         response_decode=None
 
         if latestoffset>0:
-            # so move the the previous offset
-            self.seek(self.topic_id, partid,latestoffset-1)
+
+            # ok, we need to start at the latest 
+            # and look back for one that can be used
+            while True:
+                try:
+                    # move back
+                    latestoffset=latestoffset-1
+
+                    if latestoffset<=0:
+                        break
+
+                    self.seek(self.topic_id, partid,latestoffset)
+
+                    break
+                except requests.exceptions.HTTPError as e:
+                    # and retry...
+                    pass
 
 
             # consume the earliest entry until there is no more data
