@@ -269,36 +269,40 @@ class Consumer(Client):
                     }
                 ]})
 
-        offsets = self.offsets(self.topic_id, partid)
-        # and now we have the latest offset
-        latestoffset=offsets["end_offset"]
 
         response_decode=None
 
-        if latestoffset>0:
+        retry=10
 
-            # ok, we need to start at the latest 
-            # and look back for one that can be used
-            while True:
-                try:
-                    # move back
-                    latestoffset=latestoffset-1
+        # ok, we need to start at the latest 
+        # and look back for one that can be used
+        while retry>0:
+            try:
+                
+                offsets = self.offsets(self.topic_id, partid)
+                # and now we have the latest offset
+                latestoffset=offsets["end_offset"]
+                
+                if latestoffset<=0:
+                    break
 
-                    if latestoffset<=0:
-                        break
+                latestoffset=latestoffset-1
+                self.seek(self.topic_id, partid, latestoffset)
 
-                    self.seek(self.topic_id, partid,latestoffset)
+                # consume the earliest entry until there is no more data
+                # so we can get the latest event from the topic
+                for message in self.consume_earliest():
+                    response_decode=message
 
-                    # consume the earliest entry until there is no more data
-                    # so we can get the latest event from the topic
-                    for message in self.consume_earliest():
-                        response_decode=message
+                if response_decode is not None: 
+                    break
 
-                    if response_decode is not None: 
-                        break
-                except requests.exceptions.HTTPError as e:
-                    # and retry...
-                    pass
+            except requests.exceptions.HTTPError as e:
+                # and retry...
+                pass
+
+            retry=retry-1
+
 
             
         return response_decode
