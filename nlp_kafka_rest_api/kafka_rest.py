@@ -289,16 +289,17 @@ class Consumer(Client):
 
                     self.seek(self.topic_id, partid,latestoffset)
 
-                    break
+                    # consume the earliest entry until there is no more data
+                    # so we can get the latest event from the topic
+                    for message in self.consume_earliest():
+                        dataResponse=message
+
+                    if dataResponse is not None: 
+                        break
                 except requests.exceptions.HTTPError as e:
                     # and retry...
                     pass
 
-
-            # consume the earliest entry until there is no more data
-            # so we can get the latest event from the topic
-            for message in self.consume_earliest():
-                response_decode=message
             
         return response_decode
 
