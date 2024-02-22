@@ -292,9 +292,9 @@ class Consumer(Client):
                     # consume the earliest entry until there is no more data
                     # so we can get the latest event from the topic
                     for message in self.consume_earliest():
-                        dataResponse=message
+                        response_decode=message
 
-                    if dataResponse is not None: 
+                    if response_decode is not None: 
                         break
                 except requests.exceptions.HTTPError as e:
                     # and retry...
